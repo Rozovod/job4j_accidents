@@ -51,6 +51,30 @@
             </div>
         </div>
     </nav>
+
+    <!-- Таблица со списком объявлений -->
+    <h2 style="text-align: center;">Список автонарушений:</h2>
+    <table class="table table-striped" th:if="${not #lists.isEmpty(accidents)}" style="width: 90%; margin: 0 auto;">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Название</th>
+            <th scope="col">Описание</th>
+            <th scope="col">Адрес</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="accident : ${accidents}">
+            <td th:text="${accident.id}"/>
+            <td th:text="${accident.name}"/>
+            <td th:text="${accident.text}"/>
+            <td th:text="${accident.address}"/>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Сообщение, если список объявлений пуст -->
+    <p style="margin-left: 20px; margin-top: 20px;" th:if="${#lists.isEmpty(accidents)}">Список нарушений пуст</p>
 </div>
 </body>
 </html>
