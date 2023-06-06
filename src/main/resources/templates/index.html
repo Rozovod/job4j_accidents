@@ -16,14 +16,41 @@
             integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
             crossorigin="anonymous"></script>
 
+    <style>
+        .navbar {
+            padding: 2px 20px;
+        }
+
+        .navbar-brand img {
+            max-height: 50px;
+        }
+    </style>
+
 </head>
 <body>
 
 <!-- Основной контейнер с содержимым страницы -->
 <div class="container-fluid p-0">
-    <div class="container mt-2">
-        <h3>Проект job4j_accidents, выполняемый в рамках курса Job4j</h3>
-    </div>
+
+    <!-- Панель навигации -->
+    <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center justify-content-between w-100">
+                <div class="d-flex align-items-center">
+                    <a class="navbar-brand" href="/">
+                        <img src="https://i122.fastpic.org/big/2023/0606/85/ff6e84115a1c00e409c9b413f7e82985.png" alt="AutoViolators">
+                    </a>
+                    <a class="nav-link me-auto" href="/">AutoViolators</a>
+                </div>
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link text-end" th:text="${user}"></a>
+                </div>
+                <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </div>
+    </nav>
 </div>
 </body>
 </html>
