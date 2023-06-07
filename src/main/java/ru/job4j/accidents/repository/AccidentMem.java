@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.job4j.accidents.model.Accident;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,7 +22,7 @@ public class AccidentMem {
         accidents.putIfAbsent(5, new Accident(5, "testName5", "testText5", "testAddress5"));
     }
 
-    public Collection<Accident> getAll() {
-        return accidents.values();
+    public List<Accident> getAll() {
+        return new ArrayList<>(accidents.values());
     }
 }

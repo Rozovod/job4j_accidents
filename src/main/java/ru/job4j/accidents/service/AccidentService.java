@@ -6,7 +6,7 @@ import ru.job4j.accidents.model.Accident;
 import ru.job4j.accidents.repository.AccidentMem;
 
 import javax.annotation.PostConstruct;
-import java.util.Collection;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -18,7 +18,7 @@ public class AccidentService {
         accidentMem.initAccidentRepository();
     }
 
-    public Collection<Accident> getAll() {
+    public List<Accident> getAll() {
         return accidentMem.getAll();
     }
 }
