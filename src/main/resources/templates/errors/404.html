@@ -49,29 +49,14 @@
         </div>
     </nav>
 
-    <!-- Таблица со списком объявлений -->
-    <h2 style="text-align: center;">Список автонарушений:</h2>
-    <table class="table table-striped" th:if="${not #lists.isEmpty(accidents)}" style="width: 90%; margin: 0 auto;">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Имя</th>
-            <th scope="col">Адрес</th>
-            <th scope="col">Описание</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="accident : ${accidents}">
-            <td><a th:text="${accident.id}" th:href="@{/editAccident/{accidentId}(accidentId=${accident.id})}"></a></td>
-            <td th:text="${accident.name}"/>
-            <td th:text="${accident.address}"/>
-            <td th:text="${accident.text}"/>
-        </tr>
-        </tbody>
-    </table>
+    <div class="alert alert-danger" style="font-size: 24px;">
+        <strong th:text="${message}"></strong>
+    </div>
 
-    <!-- Сообщение, если список объявлений пуст -->
-    <p style="margin-left: 20px; margin-top: 20px;" th:if="${#lists.isEmpty(accidents)}">Список нарушений пуст</p>
+    <!-- Кнопка перехода к списку объявлений -->
+    <a th:href="@{/}" class="btn btn-dark mb-2" style="margin-left: 20px">Все инциденты</a>
+
 </div>
+
 </body>
 </html>

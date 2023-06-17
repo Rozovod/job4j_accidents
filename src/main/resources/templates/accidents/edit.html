@@ -49,29 +49,32 @@
         </div>
     </nav>
 
-    <!-- Таблица со списком объявлений -->
-    <h2 style="text-align: center;">Список автонарушений:</h2>
-    <table class="table table-striped" th:if="${not #lists.isEmpty(accidents)}" style="width: 90%; margin: 0 auto;">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Имя</th>
-            <th scope="col">Адрес</th>
-            <th scope="col">Описание</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="accident : ${accidents}">
-            <td><a th:text="${accident.id}" th:href="@{/editAccident/{accidentId}(accidentId=${accident.id})}"></a></td>
-            <td th:text="${accident.name}"/>
-            <td th:text="${accident.address}"/>
-            <td th:text="${accident.text}"/>
-        </tr>
-        </tbody>
-    </table>
-
-    <!-- Сообщение, если список объявлений пуст -->
-    <p style="margin-left: 20px; margin-top: 20px;" th:if="${#lists.isEmpty(accidents)}">Список нарушений пуст</p>
+    <!-- Форма редактирования инцидента -->
+    <div class="d-flex justify-content-center pt-3">
+        <div class="card" style="width: 50%">
+            <div class="card-header">
+                Редактирование инцидента
+            </div>
+            <div class="card-body">
+                <form th:action="@{/updateAccident}" method="POST" enctype="multipart/form-data" th:object="${accident}" class="mx-auto">
+                    <input type="hidden" name="id" th:field="*{id}">
+                    <div class="form-group">
+                        <label for="name">Имя</label>
+                        <input type="text" class="form-control" id="name" name="name" th:field="*{name}">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Адрес</label>
+                        <input type="text" class="form-control" id="address" name="address" placeholder="Адрес происшествия" th:field="*{address}">
+                    </div>
+                    <div class="form-group">
+                        <label for="text" class="form-label"><b>Описание</b></label>
+                        <textarea class="form-control" id="text" name="text" rows="6" placeholder="Опишите подробности" th:field="*{text}"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success mt-3">Сохранить</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

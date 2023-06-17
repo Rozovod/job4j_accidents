@@ -7,19 +7,29 @@ import ru.job4j.accidents.model.Accident;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 @AllArgsConstructor
 public class AccidentMem {
+    private final AtomicInteger nextId = new AtomicInteger(1);
     private final Map<Integer, Accident> accidents = new ConcurrentHashMap<>();
 
-    public void initAccidentRepository() {
-        accidents.putIfAbsent(1, new Accident(1, "testName1", "testText1", "testAddress1"));
-        accidents.putIfAbsent(2, new Accident(2, "testName2", "testText2", "testAddress2"));
-        accidents.putIfAbsent(3, new Accident(3, "testName3", "testText3", "testAddress3"));
-        accidents.putIfAbsent(4, new Accident(4, "testName4", "testText4", "testAddress4"));
-        accidents.putIfAbsent(5, new Accident(5, "testName5", "testText5", "testAddress5"));
+    public boolean create(Accident accident) {
+        accident.setId(nextId.getAndIncrement());
+        return accidents.putIfAbsent(accident.getId(), accident) == null;
+    }
+
+    public boolean update(Accident accident) {
+        return accidents.computeIfPresent(accident.getId(), (id, oldAccident) -> new Accident(
+                oldAccident.getId(), accident.getName(), accident.getText(), accident.getAddress()
+        )) != null;
+    }
+
+    public Optional<Accident> findById(int id) {
+        return Optional.ofNullable(accidents.get(id));
     }
 
     public List<Accident> getAll() {
