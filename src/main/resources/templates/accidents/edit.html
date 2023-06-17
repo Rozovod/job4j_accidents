@@ -67,6 +67,17 @@
                         <input type="text" class="form-control" id="address" name="address" placeholder="Адрес происшествия" th:field="*{address}">
                     </div>
                     <div class="form-group">
+                        <label for="type.id">Тип инцидента</label>
+                        <select id="type.id" name="type.id" class="form-control">
+                            <option value="">--Выберите тип инцидента--</option>
+                            <option th:each="type : ${types}"
+                                    th:value="${type.id}"
+                                    th:text="${type.name}"
+                                    th:selected="${accident.type.id == type.id}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="text" class="form-label"><b>Описание</b></label>
                         <textarea class="form-control" id="text" name="text" rows="6" placeholder="Опишите подробности" th:field="*{text}"></textarea>
                     </div>

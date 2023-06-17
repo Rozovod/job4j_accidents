@@ -57,6 +57,7 @@
             <th scope="col">#</th>
             <th scope="col">Имя</th>
             <th scope="col">Адрес</th>
+            <th scope="col">Тип</th>
             <th scope="col">Описание</th>
         </tr>
         </thead>
@@ -65,6 +66,7 @@
             <td><a th:text="${accident.id}" th:href="@{/editAccident/{accidentId}(accidentId=${accident.id})}"></a></td>
             <td th:text="${accident.name}"/>
             <td th:text="${accident.address}"/>
+            <td th:text="${accident.type.name}"/>
             <td th:text="${accident.text}"/>
         </tr>
         </tbody>

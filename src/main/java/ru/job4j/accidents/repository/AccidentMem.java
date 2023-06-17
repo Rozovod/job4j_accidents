@@ -3,11 +3,9 @@ package ru.job4j.accidents.repository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.job4j.accidents.model.Accident;
+import ru.job4j.accidents.model.AccidentType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -16,6 +14,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AccidentMem {
     private final AtomicInteger nextId = new AtomicInteger(1);
     private final Map<Integer, Accident> accidents = new ConcurrentHashMap<>();
+    private final List<AccidentType> accidentTypes = new ArrayList<>(Arrays.asList(
+            new AccidentType(0, "Две машины"),
+            new AccidentType(1, "Машина и человек"),
+            new AccidentType(2, "Машина и велосипед")));
 
     public boolean create(Accident accident) {
         accident.setId(nextId.getAndIncrement());
@@ -24,7 +26,7 @@ public class AccidentMem {
 
     public boolean update(Accident accident) {
         return accidents.computeIfPresent(accident.getId(), (id, oldAccident) -> new Accident(
-                oldAccident.getId(), accident.getName(), accident.getText(), accident.getAddress()
+                oldAccident.getId(), accident.getName(), accident.getText(), accident.getAddress(), accident.getType()
         )) != null;
     }
 
@@ -34,5 +36,13 @@ public class AccidentMem {
 
     public List<Accident> getAll() {
         return new ArrayList<>(accidents.values());
+    }
+
+    public List<AccidentType> getAccidentTypes() {
+        return accidentTypes;
+    }
+
+    public AccidentType findTypeById(int id) {
+        return accidentTypes.get(id);
     }
 }
