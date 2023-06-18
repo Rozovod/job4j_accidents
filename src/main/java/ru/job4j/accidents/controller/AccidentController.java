@@ -27,7 +27,7 @@ public class AccidentController {
         boolean isCreated = accidentService.create(accident);
         if (!isCreated) {
             model.addAttribute("message", "Инцидент не добавлен. Попробуйте еще раз.");
-            return "errors/404";
+            return "errors/409";
         }
         model.addAttribute("message", "Инцидент добавлен успешно");
         return "success/success";
