@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.accidents.model.Accident;
-import ru.job4j.accidents.model.AccidentType;
 import ru.job4j.accidents.service.AccidentService;
 
 
@@ -22,9 +21,7 @@ public class AccidentController {
 
     @PostMapping("/saveAccident")
     public String save(@ModelAttribute Accident accident, Model model, @RequestParam("type.id") int typeId) {
-        AccidentType type = accidentService.findTypeById(typeId);
-        accident.setType(type);
-        boolean isCreated = accidentService.create(accident);
+        boolean isCreated = accidentService.create(accident, typeId);
         if (!isCreated) {
             model.addAttribute("message", "Инцидент не добавлен. Попробуйте еще раз.");
             return "errors/409";
@@ -47,9 +44,7 @@ public class AccidentController {
 
     @PostMapping("/updateAccident")
     public String update(@ModelAttribute Accident accident, @RequestParam("type.id") int typeId, Model model) {
-        AccidentType type = accidentService.findTypeById(typeId);
-        accident.setType(type);
-        var isUpdated = accidentService.update(accident);
+        var isUpdated = accidentService.update(accident, typeId);
         if (!isUpdated) {
             model.addAttribute("message", "Инцидент не обновлен. Попробуйте еще раз.");
             return "errors/404";

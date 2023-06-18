@@ -14,11 +14,15 @@ import java.util.Optional;
 public class AccidentService {
     private final AccidentMem accidentMem;
 
-    public boolean create(Accident accident) {
+    public boolean create(Accident accident, int typeId) {
+        AccidentType type = accidentMem.findTypeById(typeId);
+        accident.setType(type);
         return accidentMem.create(accident);
     }
 
-    public boolean update(Accident accident) {
+    public boolean update(Accident accident, int typeId) {
+        AccidentType type = accidentMem.findTypeById(typeId);
+        accident.setType(type);
         return accidentMem.update(accident);
     }
 
@@ -32,9 +36,5 @@ public class AccidentService {
 
     public List<AccidentType> getAccidentTypes() {
         return accidentMem.getAccidentTypes();
-    }
-
-    public AccidentType findTypeById(int id) {
-        return accidentMem.findTypeById(id);
     }
 }
