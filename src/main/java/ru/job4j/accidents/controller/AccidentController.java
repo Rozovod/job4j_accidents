@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.job4j.accidents.model.Accident;
 import ru.job4j.accidents.service.AccidentService;
 
+import java.util.List;
+
 
 @Controller
 @AllArgsConstructor
@@ -16,12 +18,15 @@ public class AccidentController {
     @GetMapping("/createAccident")
     public String viewCreateAccident(Model model) {
         model.addAttribute("types", accidentService.getAccidentTypes());
+        model.addAttribute("rules", accidentService.getRules());
         return "accidents/create";
     }
 
     @PostMapping("/saveAccident")
-    public String save(@ModelAttribute Accident accident, Model model, @RequestParam("type.id") int typeId) {
-        boolean isCreated = accidentService.create(accident, typeId);
+    public String save(@ModelAttribute Accident accident, Model model,
+                       @RequestParam("rIds") List<Integer> rIds,
+                       @RequestParam("type.id") int typeId) {
+        boolean isCreated = accidentService.create(accident, typeId, rIds);
         if (!isCreated) {
             model.addAttribute("message", "Инцидент не добавлен. Попробуйте еще раз.");
             return "errors/409";
@@ -38,13 +43,16 @@ public class AccidentController {
             return "errors/404";
         }
         model.addAttribute("types", accidentService.getAccidentTypes());
+        model.addAttribute("rules", accidentService.getRules());
         model.addAttribute("accident", accidentOptional.get());
         return "accidents/edit";
     }
 
     @PostMapping("/updateAccident")
-    public String update(@ModelAttribute Accident accident, @RequestParam("type.id") int typeId, Model model) {
-        var isUpdated = accidentService.update(accident, typeId);
+    public String update(@ModelAttribute Accident accident, Model model,
+                         @RequestParam("type.id") int typeId,
+                         @RequestParam("rIds") List<Integer> rIds) {
+        var isUpdated = accidentService.update(accident, typeId, rIds);
         if (!isUpdated) {
             model.addAttribute("message", "Инцидент не обновлен. Попробуйте еще раз.");
             return "errors/404";

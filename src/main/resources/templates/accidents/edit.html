@@ -78,6 +78,15 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="rIds">Статья</label>
+                        <select class="form-control" id="rIds" name="rIds" multiple>
+                            <option th:each="rule: ${rules}"
+                                    th:text="${rule.name}"
+                                    th:value="${rule.id}"
+                                    th:selected="${accident.rules.contains(rule)}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="text" class="form-label"><b>Описание</b></label>
                         <textarea class="form-control" id="text" name="text" rows="6" placeholder="Опишите подробности" th:field="*{text}"></textarea>
                     </div>
