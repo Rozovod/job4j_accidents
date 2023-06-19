@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.accidents.model.Accident;
 import ru.job4j.accidents.service.AccidentService;
+import ru.job4j.accidents.service.AccidentTypeService;
+import ru.job4j.accidents.service.RuleService;
 
 import java.util.List;
 
@@ -14,11 +16,13 @@ import java.util.List;
 @AllArgsConstructor
 public class AccidentController {
     private final AccidentService accidentService;
+    private final AccidentTypeService accidentTypeService;
+    private final RuleService ruleService;
 
     @GetMapping("/createAccident")
     public String viewCreateAccident(Model model) {
-        model.addAttribute("types", accidentService.getAccidentTypes());
-        model.addAttribute("rules", accidentService.getRules());
+        model.addAttribute("types", accidentTypeService.getAccidentTypes());
+        model.addAttribute("rules", ruleService.getRules());
         return "accidents/create";
     }
 
@@ -42,8 +46,8 @@ public class AccidentController {
             model.addAttribute("message", "Инцидент не найден. Попробуйте выбрать другой.");
             return "errors/404";
         }
-        model.addAttribute("types", accidentService.getAccidentTypes());
-        model.addAttribute("rules", accidentService.getRules());
+        model.addAttribute("types", accidentTypeService.getAccidentTypes());
+        model.addAttribute("rules", ruleService.getRules());
         model.addAttribute("accident", accidentOptional.get());
         return "accidents/edit";
     }
