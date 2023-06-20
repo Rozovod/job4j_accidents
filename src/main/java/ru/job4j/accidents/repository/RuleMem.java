@@ -7,7 +7,9 @@ import ru.job4j.accidents.model.Rule;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
@@ -26,5 +28,9 @@ public class RuleMem {
 
     public Rule findRuleById(int id) {
         return rules.get(id);
+    }
+
+    public Set<Rule> findSelectedRules(List<Integer> rIds) {
+        return rIds.stream().map(this::findRuleById).collect(Collectors.toSet());
     }
 }

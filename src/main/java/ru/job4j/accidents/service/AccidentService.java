@@ -12,7 +12,6 @@ import ru.job4j.accidents.repository.RuleMem;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -24,7 +23,7 @@ public class AccidentService {
     public boolean create(Accident accident, int typeId, List<Integer> rIds) {
         AccidentType type = accidentTypeMem.findTypeById(typeId);
         accident.setType(type);
-        Set<Rule> selectedRules = rIds.stream().map(ruleMem::findRuleById).collect(Collectors.toSet());
+        Set<Rule> selectedRules = ruleMem.findSelectedRules(rIds);
         accident.setRules(selectedRules);
         return accidentMem.create(accident);
     }
@@ -32,7 +31,7 @@ public class AccidentService {
     public boolean update(Accident accident, int typeId, List<Integer> rIds) {
         AccidentType type = accidentTypeMem.findTypeById(typeId);
         accident.setType(type);
-        Set<Rule> selectedRules = rIds.stream().map(ruleMem::findRuleById).collect(Collectors.toSet());
+        Set<Rule> selectedRules = ruleMem.findSelectedRules(rIds);
         accident.setRules(selectedRules);
         return accidentMem.update(accident);
     }
