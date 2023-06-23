@@ -18,42 +18,46 @@ import java.util.Set;
 @AllArgsConstructor
 public class AccidentJdbcTemplate {
     private final JdbcTemplate jdbc;
+    private static final String INSERT_ACCIDENT = "INSERT INTO accidents (name, text, address, type_id) VALUES (?, ?, ?, ?) RETURNING id";
+    private static final String INSERT_ACCIDENT_RULE = "INSERT INTO accidents_rules (accident_id, rule_id) VALUES (?, ?)";
+    private static final String UPDATE_ACCIDENT = "UPDATE accidents SET name = ?, text = ?, address = ?, type_id = ? WHERE id = ?";
+    private static final String DELETE_ACCIDENT_RULE = "DELETE FROM accidents_rules WHERE accident_id = ?";
+    private static final String SELECT_ACCIDENT_BY_ID = """
+            SELECT a.id, a.name, a.text, a.address, a.type_id, t.name as type_name
+            FROM accidents a JOIN accident_types t ON a.type_id = t.id WHERE a.id = ?""";
+    private static final String SELECT_ALL_ACCIDENTS = """
+            SELECT a.id, a.name, a.text, a.address, a.type_id, t.name as type_name
+            FROM accidents a JOIN accident_types t ON a.type_id = t.id""";
+    private static final String SELECT_RULES_FOR_ACCIDENT = """
+            SELECT r.id, r.name FROM rules r JOIN accidents_rules ar ON r.id = ar.rule_id
+            WHERE ar.accident_id = ?""";
 
     public boolean create(Accident accident) {
-        String sql = "INSERT INTO accidents (name, text, address, type_id) VALUES (?, ?, ?, ?) RETURNING id";
-        Integer accidentId = jdbc.queryForObject(sql, Integer.class,
+        Integer accidentId = jdbc.queryForObject(INSERT_ACCIDENT, Integer.class,
                 accident.getName(), accident.getText(), accident.getAddress(), accident.getType().getId());
-        if (accidentId != null) {
+        boolean rsl = accidentId != null;
+        if (rsl) {
             for (Rule rule : accident.getRules()) {
-                jdbc.update("INSERT INTO accidents_rules (accident_id, rule_id) VALUES (?, ?)", accidentId, rule.getId());
+                jdbc.update(INSERT_ACCIDENT_RULE, accidentId, rule.getId());
             }
-            return true;
-        } else {
-            return false;
         }
+        return rsl;
     }
 
     public boolean update(Accident accident) {
-        String sql = "UPDATE accidents SET name = ?, text = ?, address = ?, type_id = ? WHERE id = ?";
-        if (jdbc.update(sql, accident.getName(), accident.getText(), accident.getAddress(),
-                accident.getType().getId(), accident.getId()) > 0) {
-            jdbc.update("DELETE FROM accidents_rules WHERE accident_id = ?", accident.getId());
+        boolean rsl = jdbc.update(UPDATE_ACCIDENT, accident.getName(), accident.getText(), accident.getAddress(),
+                accident.getType().getId(), accident.getId()) > 0;
+        if (rsl) {
+            jdbc.update(DELETE_ACCIDENT_RULE, accident.getId());
             for (Rule rule : accident.getRules()) {
-                jdbc.update("INSERT INTO accidents_rules (accident_id, rule_id) VALUES (?, ?)",
-                        accident.getId(), rule.getId());
+                jdbc.update(INSERT_ACCIDENT_RULE, accident.getId(), rule.getId());
             }
-            return true;
-        } else {
-            return false;
         }
+        return rsl;
     }
 
     public Optional<Accident> findById(int id) {
-        String sql = "SELECT a.id, a.name, a.text, a.address, a.type_id, t.name as type_name "
-                + "FROM accidents a JOIN accident_types t ON a.type_id = t.id "
-                + "WHERE a.id = ?";
-        Accident accident = jdbc.queryForObject(
-                sql, this::mapRowToAccident, id);
+        Accident accident = jdbc.queryForObject(SELECT_ACCIDENT_BY_ID, this::mapRowToAccident, id);
         if (accident == null) {
             return Optional.empty();
         }
@@ -62,9 +66,7 @@ public class AccidentJdbcTemplate {
     }
 
     public List<Accident> getAll() {
-        String sql = "SELECT a.id, a.name, a.text, a.address, a.type_id, t.name as type_name "
-                + "FROM accidents a JOIN accident_types t ON a.type_id = t.id";
-        List<Accident> accidents = jdbc.query(sql, this::mapRowToAccident);
+        List<Accident> accidents = jdbc.query(SELECT_ALL_ACCIDENTS, this::mapRowToAccident);
         for (Accident accident : accidents) {
             accident.setRules(getRulesForAccident(accident));
         }
@@ -72,9 +74,7 @@ public class AccidentJdbcTemplate {
     }
 
     private Set<Rule> getRulesForAccident(Accident accident) {
-        String sql = "SELECT r.id, r.name FROM rules r JOIN accidents_rules ar ON r.id = ar.rule_id "
-                + "WHERE ar.accident_id = ?";
-        return new HashSet<>(jdbc.query(sql, this::mapRowToRule, accident.getId()));
+        return new HashSet<>(jdbc.query(SELECT_RULES_FOR_ACCIDENT, this::mapRowToRule, accident.getId()));
     }
 
     private Accident mapRowToAccident(ResultSet rs, int rowNum) throws SQLException {

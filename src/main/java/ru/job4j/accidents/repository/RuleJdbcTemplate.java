@@ -16,15 +16,17 @@ import java.util.*;
 public class RuleJdbcTemplate {
     private final JdbcTemplate jdbc;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private static final String SELECT_RULES = "SELECT * FROM rules";
+    private static final String SELECT_RULES_BY_IDS = "SELECT * FROM rules WHERE id IN (:ids)";
 
     public List<Rule> getAllRules() {
-        return jdbc.query("SELECT * FROM rules", this::mapRowToRule);
+        return jdbc.query(SELECT_RULES, this::mapRowToRule);
     }
 
     public Set<Rule> findSelectedRules(List<Integer> rIds) {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("ids", rIds);
-        List<Rule> rules = namedParameterJdbcTemplate.query("SELECT * FROM rules WHERE id IN (:ids)",
+        List<Rule> rules = namedParameterJdbcTemplate.query(SELECT_RULES_BY_IDS,
                 parameters, this::mapRowToRule);
         return new HashSet<>(rules);
     }

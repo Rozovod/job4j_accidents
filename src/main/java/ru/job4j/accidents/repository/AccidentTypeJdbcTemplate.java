@@ -13,14 +13,15 @@ import java.util.List;
 @AllArgsConstructor
 public class AccidentTypeJdbcTemplate {
     private final JdbcTemplate jdbc;
+    private static final String SELECT_ALL_ACCIDENT_TYPES = "SELECT * FROM accident_types";
+    private static final String SELECT_ACCIDENT_TYPE_BY_ID = "SELECT * FROM accident_types WHERE id = ?";
 
     public List<AccidentType> getAllAccidentTypes() {
-        return jdbc.query("SELECT * FROM accident_types", this::mapRowToAccidentType);
+        return jdbc.query(SELECT_ALL_ACCIDENT_TYPES, this::mapRowToAccidentType);
     }
 
     public AccidentType findTypeById(int id) {
-        return jdbc.queryForObject(
-                "SELECT * FROM accident_types WHERE id = ?", this::mapRowToAccidentType, id);
+        return jdbc.queryForObject(SELECT_ACCIDENT_TYPE_BY_ID, this::mapRowToAccidentType, id);
     }
 
     private AccidentType mapRowToAccidentType(ResultSet rs, int rowNum) throws SQLException {
