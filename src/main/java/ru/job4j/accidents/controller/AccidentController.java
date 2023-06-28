@@ -30,13 +30,14 @@ public class AccidentController {
     public String save(@ModelAttribute Accident accident, Model model,
                        @RequestParam("rIds") List<Integer> rIds,
                        @RequestParam("type.id") int typeId) {
-        boolean isCreated = accidentService.create(accident, typeId, rIds);
-        if (!isCreated) {
+        try {
+            accidentService.create(accident, typeId, rIds);
+            model.addAttribute("message", "Инцидент добавлен успешно");
+            return "success/success";
+        } catch (Exception e) {
             model.addAttribute("message", "Инцидент не добавлен. Попробуйте еще раз.");
             return "errors/409";
         }
-        model.addAttribute("message", "Инцидент добавлен успешно");
-        return "success/success";
     }
 
     @GetMapping("/editAccident/{id}")
@@ -56,12 +57,13 @@ public class AccidentController {
     public String update(@ModelAttribute Accident accident, Model model,
                          @RequestParam("type.id") int typeId,
                          @RequestParam("rIds") List<Integer> rIds) {
-        var isUpdated = accidentService.update(accident, typeId, rIds);
-        if (!isUpdated) {
+        try {
+            accidentService.update(accident, typeId, rIds);
+            model.addAttribute("message", "Инцидент обновлен успешно");
+            return "success/success";
+        } catch (Exception e) {
             model.addAttribute("message", "Инцидент не обновлен. Попробуйте еще раз.");
-            return "errors/404";
+            return "errors/409";
         }
-        model.addAttribute("message", "Инцидент обновлен успешно");
-        return "success/success";
     }
 }
