@@ -59,7 +59,7 @@
                 <div th:if="${not #lists.isEmpty(errorMessage)}" class="alert alert-danger" role="alert">
                     <span th:text="${errorMessage}"></span>
                 </div>
-                <form th:action="@{/login}" method="POST" class="mx-auto">
+                <form th:action="@{/users/login}" method="POST" class="mx-auto">
                     <div class="form-group">
                         <label for="login">Логин</label>
                         <input type="text" class="form-control" id="login" name="login" placeholder="example">
