@@ -24,7 +24,6 @@ public class AccidentController {
     public String viewCreateAccident(Model model) {
         model.addAttribute("types", accidentTypeService.getAccidentTypes());
         model.addAttribute("rules", ruleService.getRules());
-        model.addAttribute("user", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         return "accidents/create";
     }
 
@@ -39,7 +38,6 @@ public class AccidentController {
             return "success/success";
         } catch (Exception e) {
             model.addAttribute("message", "Инцидент не добавлен. Попробуйте еще раз.");
-            model.addAttribute("user", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
             return "errors/409";
         }
     }
@@ -49,13 +47,11 @@ public class AccidentController {
         var accidentOptional = accidentService.findById(id);
         if (accidentOptional.isEmpty()) {
             model.addAttribute("message", "Инцидент не найден. Попробуйте выбрать другой.");
-            model.addAttribute("user", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
             return "errors/404";
         }
         model.addAttribute("types", accidentTypeService.getAccidentTypes());
         model.addAttribute("rules", ruleService.getRules());
         model.addAttribute("accident", accidentOptional.get());
-        model.addAttribute("user", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         return "accidents/edit";
     }
 
@@ -66,11 +62,9 @@ public class AccidentController {
         try {
             accidentService.update(accident, typeId, rIds);
             model.addAttribute("message", "Инцидент обновлен успешно");
-            model.addAttribute("user", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
             return "success/success";
         } catch (Exception e) {
             model.addAttribute("message", "Инцидент не обновлен. Попробуйте еще раз.");
-            model.addAttribute("user", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
             return "errors/409";
         }
     }
