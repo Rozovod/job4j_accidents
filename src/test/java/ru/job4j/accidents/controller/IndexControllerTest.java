@@ -1,4 +1,4 @@
-package controller;
+package ru.job4j.accidents.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -14,25 +14,16 @@ import ru.job4j.accidents.Job4jAccidentsApplication;
 
 @SpringBootTest(classes = Job4jAccidentsApplication.class)
 @AutoConfigureMockMvc
-public class UserControllerTest {
+public class IndexControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     @WithMockUser
-    public void whenReturnLoginPage() throws Exception {
-        this.mockMvc.perform(get("/users/login"))
+    public void shouldReturnDefaultMessage() throws Exception {
+        this.mockMvc.perform(get("/index"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(view().name("users/login"));
-    }
-
-    @Test
-    @WithMockUser
-    public void whenReturnRegPage() throws Exception {
-        this.mockMvc.perform(get("/users/reg"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(view().name("users/reg"));
+                .andExpect(view().name("index"));
     }
 }
